@@ -48,6 +48,7 @@ module circuit2 (
 			write <= 0;
 	end
 
+	// The DFF array
 	always_ff @(posedge clk) begin
 		data_left1 <= data_left;
 		data_right1 <= data_right;
@@ -96,7 +97,6 @@ module circuit2_testbench ();
 		write_ready <= 1; @(posedge clk);
 		write_ready <= 0; @(posedge clk);
 		@(posedge clk);
-
 		$stop();
 	end
 endmodule
