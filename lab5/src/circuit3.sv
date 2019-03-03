@@ -18,15 +18,13 @@ module circuit3 (
       ps <= ns;
   end
 
-  // divide input by N
   logic signed [23:0] w_data_left, w_data_right;
-  //assign w_data_left = readdata_left >>> ADDR_WIDTH;
-  //assign w_data_right = readdata_right >>> ADDR_WIDTH;
   always_comb begin
     if (ns == FILLING) begin
 		w_data_left = 24'b0;
 		w_data_right = 24'b0;
     end else begin
+    // divide input by N
 		w_data_left = readdata_left >>> ADDR_WIDTH;
 		w_data_right = readdata_right >>> ADDR_WIDTH;
     end
@@ -34,7 +32,6 @@ module circuit3 (
 
   logic ready;
   assign ready = read_ready & write_ready;
-  // read and write output???
   assign read = ready;
   assign write = ready;
 
@@ -130,35 +127,12 @@ module circuit3 (
     end else begin
       accum_left <= accum_left + add_left;
       accum_right <= accum_right + add_right;
-		//accum_left <= of_left;
-		//accum_right <= of_right;
     end
   end
-
-  //overflow overflow_left (.out(of_left), .a(accum_left), .b(add_left));
-  //overflow overflow_right (.out(of_right), .a(accum_right), .b(add_right));
 
   assign writedata_left = accum_left;
   assign writedata_right = accum_right;
 
-endmodule
-
-module overflow (
-	input logic signed [23:0] a, b,
-	output logic signed [23:0] out
-	);
-
-	logic signed [23:0] add;
-	assign add = a + b;
-
-	always_comb begin
-		if (add < 0 & a > 0 & b > 0)
-			out = {1'b0, 23'b1};
-		else if (add > 0 & a < 0 & b < 0)
-			out = {1'b1, 23'b0};
-		else
-			out = add;
-	end
 endmodule
 
 module circuit3_testbench ();
