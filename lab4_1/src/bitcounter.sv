@@ -7,9 +7,9 @@
 // Count how many ones in an n-bit input A.
 
 module bitcounter (
-  output logic [3:0] result,
-  output logic done,
-  input logic [7:0] A,
+	output logic [3:0] result,
+	output logic done,
+	input logic [7:0] A,
   input logic clk, reset, start
   );
 
