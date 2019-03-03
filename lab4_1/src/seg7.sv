@@ -1,9 +1,16 @@
+// CSE 371
+// Lab 4 Part 1
+// Jie Deng, Luke Jiang
+// 21/02/2019
+
+// seg7 display (hex)
+
 module seg7 (leds, bcd);
 	output logic  [6:0] leds;
 	input  logic  [3:0] bcd;
 	always_comb begin
 		case (bcd)
-		//          Light: 6543210
+		  //          Light: 6543210
 			4'b0000: leds = 7'b1000000; // 0
 			4'b0001: leds = 7'b1111001; // 1
 			4'b0010: leds = 7'b0100100; // 2
@@ -28,9 +35,9 @@ endmodule
 module seg7_testbench ();
   logic  [6:0] leds;
   logic  [3:0] bcd;
-  
+
   seg7 dut (.leds, .bcd);
-  
+
   integer i;
   initial begin
 	for (i = 0; i < 10; i++) begin
