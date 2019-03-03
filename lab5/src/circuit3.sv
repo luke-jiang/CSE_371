@@ -1,3 +1,14 @@
+// CSE 371
+// Lab 5 Part 3
+// Jie Deng, Luke Jiang
+// 28/02/2019
+
+// Implement task 3 filter.
+// Use a 3-state FSM: {FILLING, FREEZE, NORMAL}. Initially, when FIFO is empty,
+// fill zero to avoid overflow. At the transition of FILLING to NORMAL, remove
+// one top element from the FIFO.
+
+
 module circuit3 (
   input logic read_ready, write_ready,
   input logic signed [23:0] readdata_left, readdata_right,
@@ -21,12 +32,12 @@ module circuit3 (
   logic signed [23:0] w_data_left, w_data_right;
   always_comb begin
     if (ns == FILLING) begin
-		w_data_left = 24'b0;
-		w_data_right = 24'b0;
+      w_data_left = 24'b0;
+      w_data_right = 24'b0;
     end else begin
     // divide input by N
-		w_data_left = readdata_left >>> ADDR_WIDTH;
-		w_data_right = readdata_right >>> ADDR_WIDTH;
+      w_data_left = readdata_left >>> ADDR_WIDTH;
+      w_data_right = readdata_right >>> ADDR_WIDTH;
     end
   end
 
@@ -39,8 +50,6 @@ module circuit3 (
   logic rd, wr;                                  // FIFO cntrl
   logic empty, full;                             // FIFO status
   logic signed [23:0] r_data_left, r_data_right; // FIFO output
-
-
 
   fifo #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) left_fifo (
     .clk, .reset,
@@ -58,70 +67,68 @@ module circuit3 (
     .r_data(r_data_right)     // FIFO output
   );
 
-
   always_comb begin
     case (ps)
       FILLING: begin
         if (~full) begin
           ns = FILLING;
-			 rd <= 0;
-			 wr <= 1;
+    		 rd <= 0;
+    		 wr <= 1;
         end else begin
           ns = NORMAL;
-			 rd <= 1;
-			 wr <= 0;
-		  end
+          rd <= 1;
+          wr <= 0;
+        end
       end
       FREEZE: begin
         if (~ready) begin
           ns = FREEZE;
-			 rd <= 0;
-			 wr <= 0;
+          rd <= 0;
+          wr <= 0;
         end else begin
           ns = NORMAL;
-			 rd <= 1;
-			 wr <= 1;
-		  end
+          rd <= 1;
+          wr <= 1;
+        end
       end
       NORMAL: begin
-		  if (~ready) begin
+        if (~ready) begin
           ns = FREEZE;
-			 rd <= 0;
-			 wr <= 0;
+          rd <= 0;
+          wr <= 0;
         end else begin
           ns = NORMAL;
-			 rd <= 1;
-			 wr <= 1;
-		  end
+          rd <= 1;
+          wr <= 1;
+        end
       end
     endcase
-
-    //rd = (ns == NORMAL) ;  //????
-    //wr = (ns == NORMAL) | (ns == FILLING);
   end
 
+  // input to the accumulator adder
   logic signed [23:0] add_left, add_right;
   always_comb begin
     if (ns == FILLING) begin
       add_left = w_data_left;
       add_right = w_data_right;
 	 end else if (ns == FREEZE) begin
-		add_left = 24'b0;
-		add_right = 24'b0;
+      add_left = 24'b0;
+      add_right = 24'b0;
     end else begin
       add_left = w_data_left - r_data_left;
       add_right = w_data_right - r_data_right;
     end
   end
 
-  logic signed [23:0] accum_left, accum_right;
-  logic signed [23:0] of_left, of_right;
   // The Accumulator register
+  logic signed [23:0] accum_left, accum_right;
   always_ff @(posedge clk) begin
     if (reset) begin
+      // on reset, clear the accumulator
       accum_left <= 24'b0;
       accum_right <= 24'b0;
     end else if (~ready) begin
+      // at FREEZE, accumulator keeps old value
       accum_left <= accum_left;
       accum_right <= accum_right;
     end else begin
@@ -130,6 +137,7 @@ module circuit3 (
     end
   end
 
+  // assign output
   assign writedata_left = accum_left;
   assign writedata_right = accum_right;
 
