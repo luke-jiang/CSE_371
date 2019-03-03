@@ -29,11 +29,11 @@ module bitcounter_controller (
   enum {S1, S2, S3} ps, ns;
 
   always_comb begin
-  	case (ps)
+    case (ps)
       S1: ns = start ? S2 : S1;
       S2: ns = (Ar == 0) ? S3 : S2;
       S3: ns = start ? S3 : S1;
-  	endcase
+    endcase
   end
 
   always_comb begin
