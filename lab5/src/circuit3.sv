@@ -35,7 +35,7 @@ module circuit3 (
       w_data_left = 24'b0;
       w_data_right = 24'b0;
     end else begin
-    // divide input by N
+      // divide input by N
       w_data_left = readdata_left >>> ADDR_WIDTH;
       w_data_right = readdata_right >>> ADDR_WIDTH;
     end
