@@ -144,38 +144,40 @@ module circuit3 (
 endmodule
 
 module circuit3_testbench ();
-	logic read_ready, write_ready;
-	logic signed [23:0] readdata_left, readdata_right;
-	logic clk;
-	logic reset;
+  logic read_ready, write_ready;
+  logic signed [23:0] readdata_left, readdata_right;
+  logic clk;
+  logic reset;
 
-	logic read, write;
-	logic signed [23:0] writedata_left, writedata_right;
+  logic read, write;
+  logic signed [23:0] writedata_left, writedata_right;
 
-	circuit3 dut (.*);
+  circuit3 dut (.*);
 
-	parameter CLOCK_PERIOD = 100;
-	initial begin
-		clk <= 0;
-		forever #(CLOCK_PERIOD/2) clk <= ~clk;
-	end
+  parameter CLOCK_PERIOD = 100;
+  initial begin
+    clk <= 0;
+    forever #(CLOCK_PERIOD/2) clk <= ~clk;
+  end
 
-	integer i;
-	initial begin
-		reset <= 1; @(posedge clk);
-		reset <= 0;
-		read_ready <= 1; write_ready <= 1; readdata_left <= 24'd512;
+  integer i;
+  initial begin
+    reset <= 1; @(posedge clk);
+    reset <= 0;
+    read_ready <= 1;
+    write_ready <= 1;
+    readdata_left <= 24'd512;
     readdata_right <= 24'd512; @(posedge clk);
 
-		for (i = 0; i < 20; i++) begin
-			if((i > 4) & (i < 7))
-				read_ready <= 0; // freeze at FILLING, no effect
-			else if ((i > 12) & (i < 14))
-				read_ready <= 0;
-			else
-				read_ready <= 1; // freeze at NORMAL, should go to FREEZE state
-			@(posedge clk);
-		end
-		$stop();
-	end
+    for (i = 0; i < 20; i++) begin
+      if((i > 4) & (i < 7))
+        read_ready <= 0; // freeze at FILLING, no effect
+      else if ((i > 12) & (i < 14))
+        read_ready <= 0;
+      else
+        read_ready <= 1; // freeze at NORMAL, should go to FREEZE state
+      @(posedge clk);
+    end
+    $stop();
+  end
 endmodule
