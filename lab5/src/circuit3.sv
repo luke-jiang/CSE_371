@@ -75,8 +75,8 @@ module circuit3 (
       FILLING: begin
         if (~full) begin
           ns = FILLING;
-    		  rd <= 0;
-    		  wr <= 1;
+          rd <= 0;
+          wr <= 1;
         end else begin
           ns = NORMAL;
           rd <= 1;

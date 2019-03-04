@@ -81,11 +81,10 @@ module DE1_SoC (HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, KEY, LEDR, SW, CLOCK_50,
   // FSM for drawing two lines
   enum {A, B, C, D} ps, ns;
   always_ff @(posedge clk, posedge reset) begin
-    if (reset) begin
+    if (reset)
       ps <= A;
-    end else begin
+    else
       ps <= ns;
-    end
   end
 
   always_comb begin
