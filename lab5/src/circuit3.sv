@@ -114,7 +114,7 @@ module circuit3 (
     if (ns == FILLING) begin
       add_left = w_data_left;
       add_right = w_data_right;
-	 end else if (ns == FREEZE) begin
+    end else if (ns == FREEZE) begin
       add_left = 24'b0;
       add_right = 24'b0;
     end else begin
