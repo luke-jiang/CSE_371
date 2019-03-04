@@ -176,9 +176,9 @@ module circuit3_testbench ();
       if((i > 4) & (i < 7))
         read_ready <= 0; // freeze at FILLING, no effect
       else if ((i > 12) & (i < 14))
-        read_ready <= 0;
+        read_ready <= 0; // freeze at NORMAL, should go to FREEZE state
       else
-        read_ready <= 1; // freeze at NORMAL, should go to FREEZE state
+        read_ready <= 1;
       @(posedge clk);
     end
     $stop();
