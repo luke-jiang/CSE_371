@@ -6,7 +6,8 @@
 // Implement task 3 filter.
 // Use a 3-state FSM: {FILLING, FREEZE, NORMAL}. Initially, when FIFO is empty,
 // fill zero to avoid overflow. At the transition of FILLING to NORMAL, remove
-// one top element from the FIFO.
+// one top element from the FIFO. Data wires must be signed to make the right
+// shift operator (>>>) work.
 
 
 module circuit3 (
@@ -32,6 +33,7 @@ module circuit3 (
   logic signed [23:0] w_data_left, w_data_right;
   always_comb begin
     if (ns == FILLING) begin
+      // in FILLING state, push 0 into FIFO to prevent overflow
       w_data_left = 24'b0;
       w_data_right = 24'b0;
     end else begin
@@ -42,6 +44,7 @@ module circuit3 (
   end
 
   logic ready;
+  // Crucial. Always use read_ready and write_read together.
   assign ready = read_ready & write_ready;
   assign read = ready;
   assign write = ready;
@@ -72,8 +75,8 @@ module circuit3 (
       FILLING: begin
         if (~full) begin
           ns = FILLING;
-    		 rd <= 0;
-    		 wr <= 1;
+    		  rd <= 0;
+    		  wr <= 1;
         end else begin
           ns = NORMAL;
           rd <= 1;
