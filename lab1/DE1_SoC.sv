@@ -1,3 +1,10 @@
+// CSE 371
+// Lab 1
+// Luke Jiang
+// 18/01/2018
+
+// Top module of the parking lot system.
+
 module DE1_SoC (
   // for 7seg display
   output logic [6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5,

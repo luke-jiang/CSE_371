@@ -1,3 +1,10 @@
+// CSE 371
+// Lab 1
+// Luke Jiang
+// 18/01/2018
+
+// Sensor to Enter/Exit FSM.
+
 module getMotion (
   output logic exit, enter,
   input logic a, b,

@@ -1,3 +1,10 @@
+// CSE 371
+// Lab 1
+// Luke Jiang
+// 18/01/2018
+
+// Implement a counter in range [0, 25]
+
 module counter25 (
   output logic [4:0] out,
   input logic inc, dec,
